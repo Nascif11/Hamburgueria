@@ -1,5 +1,7 @@
 package Padrao.hamburgueria;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,4 +41,5 @@ public class Cliente implements Observer {
     public String getStatus() {
         return status;
     }
+
 }
