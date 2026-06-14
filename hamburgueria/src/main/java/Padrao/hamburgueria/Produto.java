@@ -13,4 +13,13 @@ public class Produto extends ItemCardapio {
     public double getPreco() {
         return preco;
     }
+
+    @Override
+    public String aceitar(Visitor visitor) {
+        return visitor.visitarProduto(this);
+    }
+
+    public String getNome() {
+        return nome;
+    }
 }

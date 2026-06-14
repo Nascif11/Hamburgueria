@@ -10,7 +10,5 @@ public abstract class ItemCardapio {
 
     public abstract double getPreco();
 
-    public String getNome() {
-        return nome;
-    }
+    public abstract String aceitar(Visitor visitor);
 }

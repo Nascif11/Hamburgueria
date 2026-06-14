@@ -1,5 +1,4 @@
 package Padrao.hamburgueria;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,19 @@ public class Combo extends ItemCardapio {
 
         double total = 0;
 
-        for(ItemCardapio item : itens) {
+        for (ItemCardapio item : itens) {
             total += item.getPreco();
         }
 
         return total;
+    }
+
+    @Override
+    public String aceitar(Visitor visitor) {
+        return visitor.visitarCombo(this);
+    }
+
+    public String getNome() {
+        return nome;
     }
 }
