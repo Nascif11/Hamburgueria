@@ -7,4 +7,13 @@ public class Cozinha {
 
         command.executar();
     }
+    public void prepararHamburguer() {
+        Preparacao preparo = new PreparacaoHamburguer();
+    }
+
+    public void prepararWrap() {
+        Preparacao preparo = new PreparacaoWrap();
+
+    }
+
 }

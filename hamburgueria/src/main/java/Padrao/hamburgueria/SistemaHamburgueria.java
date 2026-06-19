@@ -1,6 +1,13 @@
 package Padrao.hamburgueria;
 
 public class SistemaHamburgueria {
+    private CentralPedidos central;
+    private GerenciadorPedidos gerenciador;
+
+    public Pedido fazerPedidoClassico() { }
+    public Pedido fazerPedidoGourmet() { }
+    public double calcularTotal(Pedido pedido) { }
+    public String obterStatusPedido(String id) { }
 
     public String fazerPedidoPremium() {
 

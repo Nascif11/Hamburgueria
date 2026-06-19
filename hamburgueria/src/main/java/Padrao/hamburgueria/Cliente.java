@@ -12,6 +12,17 @@ public class Cliente implements Observer {
 
     private IAvaliacaoPedido avaliacao;
     private AvaliacaoAdapter adapter;
+    private Pedido ultimoPedido;
+
+    public Pedido repetirUltimoPedido() {
+        if (ultimoPedido == null)
+            throw new IllegalStateException("Nenhum pedido anterior");
+        return ultimoPedido.clone();
+    }
+    public void setUltimoPedido(Pedido pedido) {
+        this.ultimoPedido = pedido;
+    }
+
 
     public Cliente(String nome) {
         this.nome = nome;
@@ -25,12 +36,18 @@ public class Cliente implements Observer {
         adapter.salvarAvaliacao();
     }
 
+
+
+
     public String getAvaliacao() {
         return adapter.recuperarAvaliacao();
     }
 
     public float getNota() {
         return adapter.getNota();
+    }
+    public String getNome() {
+        return nome;
     }
 
     @Override
