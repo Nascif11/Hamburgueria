@@ -19,9 +19,9 @@ public class Pedido extends Observable implements Cloneable {
         this.id = "PED_" + System.currentTimeMillis();
         this.dataCriacao = LocalDateTime.now();
         this.desconto = 0;
+        this.estado = new Confirmado();
     }
 
-    // ===== GETTERS =====
 
     public String getId() {
         return id;
@@ -87,7 +87,7 @@ public class Pedido extends Observable implements Cloneable {
             pedidoClonado.id = "PED_" + System.currentTimeMillis();
             pedidoClonado.dataCriacao = LocalDateTime.now();
             pedidoClonado.dataEntrega = null;
-            pedidoClonado.estado = new Confirmado(); // Estado inicial
+            pedidoClonado.estado = new Confirmado();
             return pedidoClonado;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Erro ao clonar pedido", e);
@@ -112,10 +112,10 @@ public class Pedido extends Observable implements Cloneable {
         total += frete.calcular(total);
         total -= desconto;
 
-        return Math.max(total, 0); // Nunca negativo
+        return Math.max(total, 0);
     }
 
-    // ===== INFORMAÇÕES =====
+
 
     @Override
     public String toString() {
