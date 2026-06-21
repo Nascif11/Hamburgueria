@@ -93,6 +93,13 @@ public class Pedido extends Observable implements Cloneable {
             throw new RuntimeException("Erro ao clonar pedido", e);
         }
     }
+    public PedidoMemento salvar() {
+        return new PedidoMemento(this.estado);
+    }
+
+    public void restaurar(PedidoMemento memento) {
+        this.estado = memento.getEstado();
+    }
 
     public void atualizarPedido() {
         setChanged();

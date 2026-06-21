@@ -1,0 +1,308 @@
+@startuml Hamburgueria_Padroes_Completo
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+left to right direction
+
+title Sistema Hamburgueria - Padrões de Projeto
+
+package "CRIACIONAIS" {
+
+class GerenciadorPedidos <<Singleton>> {
+-instance
++getInstance()
++adicionarPedido()
++getPedidos()
+}
+
+abstract class LancheFactory {
++criarLanche()
+}
+
+class HamburguerFactory
+class WrapFactory
+
+LancheFactory <|-- HamburguerFactory
+LancheFactory <|-- WrapFactory
+
+interface FabricaIngredientes{
++criarPao()
++criarCarne()
++criarMolho()
+}
+
+class FabricaClassica
+class FabricaGourmet
+
+FabricaIngredientes <|.. FabricaClassica
+FabricaIngredientes <|.. FabricaGourmet
+
+class PedidoBuilder{
++comCliente()
++comLanche()
++comEstado()
++comFrete()
++comDesconto()
++build()
+}
+
+}
+
+package "ESTRUTURAIS" {
+
+abstract class Lanche{
+#fabrica
+#modo
++descricao()
++preco()
++montar()
+}
+
+class Hamburguer
+class Wrap
+
+Lanche <|-- Hamburguer
+Lanche <|-- Wrap
+
+Hamburguer --> FabricaIngredientes
+Wrap --> FabricaIngredientes
+
+interface ModoCozimento{
++cozinhar()
+}
+
+class NaChapa
+class NoForno
+
+ModoCozimento <|.. NaChapa
+ModoCozimento <|.. NoForno
+
+Hamburguer --> ModoCozimento
+Wrap --> ModoCozimento
+
+abstract class LancheDecorator{
+#lanche
+}
+
+class ExtraQueijo
+
+LancheDecorator --|> Lanche
+ExtraQueijo --|> LancheDecorator
+ExtraQueijo --> Lanche
+
+interface IAvaliacaoPedido
+
+class AvaliacaoTexto
+class AvaliacaoNota
+class AvaliacaoAdapter
+
+IAvaliacaoPedido <|.. AvaliacaoTexto
+AvaliacaoAdapter --> IAvaliacaoPedido
+AvaliacaoAdapter --|> AvaliacaoNota
+
+abstract class ItemCardapio{
++getPreco()
++aceitar()
+}
+
+class Produto
+class Combo
+
+ItemCardapio <|-- Produto
+ItemCardapio <|-- Combo
+
+Combo *-- ItemCardapio
+
+class Cardapio
+
+interface IteradorCardapio
+class IteradorCardapioImpl
+
+Cardapio --> IteradorCardapio
+IteradorCardapio <|.. IteradorCardapioImpl
+IteradorCardapioImpl --> ItemCardapio
+
+class CentralPedidos
+
+}
+
+package "COMPORTAMENTAIS" {
+
+class Pedido{
+-id
+-cliente
+-lanche
+-estado
+-frete
+-desconto
++clone()
++calcularTotal()
++notificar()
+}
+
+class Cliente
+
+Pedido --> Cliente
+Cliente --> AvaliacaoAdapter
+
+
+interface PedidoCommand{
++executar()
+}
+class PedidoMemento #C8E6C9
+class HistoricoPedido #C8E6C9
+
+
+class PrepararPedidoCommand
+class EntregarPedidoCommand
+
+PedidoCommand <|.. PrepararPedidoCommand
+PedidoCommand <|.. EntregarPedidoCommand
+
+PrepararPedidoCommand --> Pedido
+EntregarPedidoCommand --> Pedido
+
+interface EstadoPedido{
++getEstado()
+}
+class PedidoMemento
+class HistoricoPedido
+
+Pedido --> PedidoMemento
+Pedido <-- PedidoMemento
+HistoricoPedido --> PedidoMemento
+HistoricoPedido --> Pedido
+
+class Confirmado
+class EmPreparo
+class SaiuParaEntrega
+class Entregue
+class Cancelado
+
+EstadoPedido <|.. Confirmado
+EstadoPedido <|.. EmPreparo
+EstadoPedido <|.. SaiuParaEntrega
+EstadoPedido <|.. Entregue
+EstadoPedido <|.. Cancelado
+
+Pedido --> EstadoPedido
+
+interface Frete{
++calcular()
+}
+
+class FreteMoto
+class FreteGratis
+
+Frete <|.. FreteMoto
+Frete <|.. FreteGratis
+
+Pedido --> Frete
+
+abstract class Preparacao{
++preparar()
+}
+
+class PreparacaoHamburguer
+class PreparacaoWrap
+
+Preparacao <|-- PreparacaoHamburguer
+Preparacao <|-- PreparacaoWrap
+
+interface Visitor{
++visitarProduto()
++visitarCombo()
+}
+
+class RelatorioPrecoVisitor
+
+Visitor <|.. RelatorioPrecoVisitor
+
+Produto --> Visitor
+Combo --> Visitor
+ItemCardapio --> Visitor
+
+abstract class Desconto{
+#proximo
++calcular()
+}
+
+class DescontoCupom
+class SemDesconto
+
+Desconto <|-- DescontoCupom
+Desconto <|-- SemDesconto
+
+Pedido --> Desconto
+
+}
+
+
+package "i" {
+
+class Cozinha
+class SistemaHamburgueria
+class ValidarEstado
+Cozinha --> Preparacao
+
+
+}
+
+
+
+HamburguerFactory --> Hamburguer
+WrapFactory --> Wrap
+
+'BRIDGE
+
+Lanche --> FabricaIngredientes
+Lanche --> ModoCozimento
+
+'BUILDER
+
+PedidoBuilder --> Pedido
+PedidoBuilder --> Cliente
+PedidoBuilder --> Lanche
+PedidoBuilder --> EstadoPedido
+PedidoBuilder --> Frete
+PedidoBuilder --> Desconto
+
+'FACADE
+
+SistemaHamburgueria --> CentralPedidos
+
+CentralPedidos --> PedidoBuilder
+CentralPedidos --> GerenciadorPedidos
+CentralPedidos --> Cozinha
+CentralPedidos --> ValidarEstado
+CentralPedidos --> Pedido
+
+'Cozinha
+
+Cozinha --> PedidoCommand
+
+'Singleton
+
+SistemaHamburgueria --> GerenciadorPedidos
+
+'Prototype
+
+Cliente --> Pedido
+
+'Observer
+
+Pedido --> Cliente
+
+'State
+
+ValidarEstado --> EstadoPedido
+
+'Composite
+
+Cardapio --> ItemCardapio
+
+'Visitor
+
+Cardapio --> Visitor
+
+@enduml
